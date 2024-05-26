@@ -3,7 +3,7 @@ const router = express.Router()
 const Timer = require("../models/timer") // Assuming you have a Timer model
 
 // Route to create a new timer
-router.post("/timer", async (req, res) => {
+router.post("/api/timer", async (req, res) => {
   try {
     const { endTime } = req.body
     const timer = new Timer({ endTime })
