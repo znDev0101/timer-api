@@ -16,13 +16,10 @@ const io = socketIo(server, {
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect(
-  "mongodb+srv://zulfanurhuda01:zulfatasik28!@timer-countdown.thkne8y.mongodb.net/?retryWrites=true&w=majority&appName=Timer-countdown",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-)
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 
 const timerSchema = new mongoose.Schema({
   endTime: Date,
