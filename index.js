@@ -18,7 +18,7 @@ const io = socketIo(server, {
 
 app.use(
   cors({
-    origin: "https://deadline-timer.vercel.app/",
+    origin: "*",
   })
 )
 app.use(express.json())
