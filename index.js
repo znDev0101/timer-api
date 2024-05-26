@@ -9,7 +9,8 @@ const app = express()
 const server = http.createServer(app)
 const io = socketIo(server, {
   cors: {
-    origin: "https://deadline-timer.vercel.app", // Allow any origin
+    origin: "https://deadline-timer.vercel.app/",
+    origin: "https://deadline-timer.vercel.app/api/timer",
     methods: ["GET", "POST"], // Specify allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
   },
@@ -17,7 +18,7 @@ const io = socketIo(server, {
 
 app.use(
   cors({
-    origin: "https://deadline-timer.vercel.app", // Replace with your frontend's origin
+    origin: "https://deadline-timer.vercel.app/",
   })
 )
 app.use(express.json())
