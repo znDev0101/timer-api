@@ -17,7 +17,7 @@ app.use(cors())
 app.use(express.json())
 
 mongoose.connect(
-  "mongodb+srv://zulfanurhuda01:zulfatasik28!@timer-countdown.thkne8y.mongodb.net/?retryWrites=true&w=majority&appName=Timer-countdown",
+  "mongodb+srv://zulfanurhuda01:zulfatasik28@timer-countdown.thkne8y.mongodb.net/?retryWrites=true&w=majority&appName=Timer-countdown",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
