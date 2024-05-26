@@ -6,5 +6,8 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [{ "src": "/timer-api/(.*)", "dest": "/index.js" }]
+  "routes": [
+    { "src": "/timer-api/(.*)", "dest": "/index.js" },
+    { "src": "/", "dest": "/index.js" }
+  ]
 }

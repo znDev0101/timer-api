@@ -1,9 +1,9 @@
 const express = require("express")
 const mongoose = require("mongoose")
-const { v4: uuidv4 } = require("uuid")
 const cors = require("cors")
 const http = require("http")
 const socketIo = require("socket.io")
+const timerRoutes = require("./routes/timer")
 
 const app = express()
 const server = http.createServer(app)
@@ -15,48 +15,30 @@ const io = socketIo(server, {
   },
 })
 
-const corsOptions = {
-  origin: "https://deadline-timer.vercel.app",
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
+app.use(cors()) // Use the cors middleware
+app.use(express.json())
+app.use("/api", timerRoutes)
+
+// Basic route to test server
+app.get("/", (req, res) => {
+  res.send("Backend is running")
+})
+
+// Check if MONGO_URI is defined
+if (!process.env.MONGO_URI) {
+  console.error("MONGO_URI environment variable is not defined.")
+} else {
+  console.log("MONGO_URI:", process.env.MONGO_URI)
 }
 
-app.use(cors(corsOptions))
-app.use(express.json())
-
-mongoose.connect(
-  "mongodb+srv://zulfanurhuda01:zulfatasik28@timer-countdown.thkne8y.mongodb.net/?retryWrites=true&w=majority&appName=Timer-countdown",
-  {
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  }
-)
-
-const timerSchema = new mongoose.Schema({
-  endTime: Date,
-  uuid: { type: String, unique: true },
-})
-
-const Timer = mongoose.model("Timer", timerSchema)
-
-app.post("/api/timer", async (req, res) => {
-  const { duration } = req.body
-  const endTime = new Date(Date.now() + duration * 1000)
-  const uuid = uuidv4()
-  const timer = new Timer({ endTime, uuid })
-  await timer.save()
-  res.send({ endTime, uuid })
-})
-
-app.get("/api/timer/:uuid", async (req, res) => {
-  const { uuid } = req.params
-  const timer = await Timer.findOne({ uuid })
-  if (timer) {
-    res.send({ endTime: timer.endTime })
-  } else {
-    res.status(404).send({ error: "Timer not found" })
-  }
-})
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch((error) => console.log("MongoDB connection error:", error))
 
 const calculateTimeLeft = (endTime) => {
   const now = new Date()
@@ -106,5 +88,3 @@ const PORT = process.env.PORT || 3000
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 })
-
-module.exports = app
