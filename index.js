@@ -13,6 +13,7 @@ const io = socketIo(server, {
     origin: "https://deadline-timer.vercel.app/api/timer",
     methods: ["GET", "POST"], // Specify allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
+    Credential: true,
   },
 })
 
