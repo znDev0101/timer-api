@@ -24,19 +24,15 @@ app.get("/", (req, res) => {
   res.send("Backend is running")
 })
 
-// Check if MONGO_URI is defined
-if (!process.env.MONGO_URI) {
-  console.error("MONGO_URI environment variable is not defined.")
-} else {
-  console.log("MONGO_URI:", process.env.MONGO_URI)
-}
-
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://zulfanurhuda01:zulfatasik28@timer-countdown.thkne8y.mongodb.net/?retryWrites=true&w=majority&appName=Timer-countdown",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.log("MongoDB connection error:", error))
 
