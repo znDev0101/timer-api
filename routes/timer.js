@@ -14,12 +14,12 @@ const io = socketIo(server, {
   },
 })
 
-const corsOptions = {
-  origin: "https://deadline-timer.vercel.app/",
-  optionsSuccessStatus: 200,
-}
-
-app.use(cors(corsOptions))
+app.use(
+  cors({
+    origin: "https://deadline-timer.vercel.app/",
+    optionsSuccessStatus: 200,
+  })
+)
 app.use(express.json())
 
 mongoose.connect(
