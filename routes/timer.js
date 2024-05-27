@@ -1,30 +1,74 @@
+// server.js
 const express = require("express")
-const router = express.Router()
-const Timer = require("../models/timer") // Assuming you have a Timer model
+const http = require("http")
+const mongoose = require("mongoose")
+const socketIo = require("socket.io")
+const cors = require("cors")
+const { v4: uuidv4 } = require("uuid")
 
-// Route to create a new timer
-router.post("/api/timer", async (req, res) => {
-  try {
-    const { endTime } = req.body
-    const timer = new Timer({ endTime })
-    await timer.save()
-    res.status(201).send(timer)
-  } catch (error) {
-    res.status(500).send(error)
-  }
+const app = express()
+const server = http.createServer(app)
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+  },
 })
 
-// Route to get a timer by UUID
-router.get("/timer/:uuid", async (req, res) => {
-  try {
-    const timer = await Timer.findOne({ uuid: req.params.uuid })
-    if (!timer) {
-      return res.status(404).send("Timer not found")
+const corsOptions = {
+  origin: "https://deadline-timer.vercel.app/",
+  optionsSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions))
+app.use(express.json())
+
+mongoose.connect(
+  "mongodb+srv://zulfanurhuda01:zulfatasik28@timer-countdown.thkne8y.mongodb.net/?retryWrites=true&w=majority&appName=Timer-countdown",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+)
+
+const TimerSchema = new mongoose.Schema({
+  deadline: Date,
+  link: String,
+})
+
+const Timer = mongoose.model("Timer", TimerSchema)
+
+app.post("/create-timer", async (req, res) => {
+  const { deadline } = req.body
+  const link = uuidv4()
+  const timer = new Timer({ deadline, link })
+  await timer.save()
+  res.json({ link })
+})
+
+io.on("connection", (socket) => {
+  console.log("New client connected")
+
+  socket.on("join", async (link) => {
+    const timer = await Timer.findOne({ link })
+    if (timer) {
+      socket.join(link)
+      io.to(link).emit("timer", timer.deadline)
     }
-    res.send(timer)
-  } catch (error) {
-    res.status(500).send(error)
-  }
+  })
+
+  socket.on("start-timer", async ({ link, deadline }) => {
+    const timer = await Timer.findOne({ link })
+    if (timer) {
+      timer.deadline = deadline
+      await timer.save()
+      io.to(link).emit("timer", timer.deadline)
+    }
+  })
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected")
+  })
 })
 
-module.exports = router
+const PORT = process.env.PORT || 3000
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
