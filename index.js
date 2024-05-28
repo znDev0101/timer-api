@@ -32,6 +32,10 @@ Timer.findOne().then((timer) => {
   }
 })
 
+app.get("/", async (req, res) => {
+  console.log("its works")
+})
+
 // Routes
 app.get("/timer", async (req, res) => {
   const timer = await Timer.findOne()
