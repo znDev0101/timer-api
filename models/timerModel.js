@@ -5,8 +5,7 @@ const { v4: uuidv4 } = require("uuid")
 const timerSchema = new mongoose.Schema({
   uuid: {
     type: String,
-    default: uuidv4,
-    unique: true,
+    required: true,
   },
   second: {
     type: Number,
