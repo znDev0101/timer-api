@@ -8,8 +8,20 @@ const timerSchema = new mongoose.Schema({
     default: uuidv4,
     unique: true,
   },
-  endTime: {
-    type: Date,
+  second: {
+    type: Number,
+    required: true,
+  },
+  minutes: {
+    type: Number,
+    required: true,
+  },
+  hours: {
+    type: Number,
+    required: true,
+  },
+  day: {
+    type: Number,
     required: true,
   },
 })
