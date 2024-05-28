@@ -33,7 +33,7 @@ Timer.findOne().then((timer) => {
 })
 
 app.get("/", async (req, res) => {
-  console.log("its works")
+  res.json("its works")
 })
 
 // Routes
