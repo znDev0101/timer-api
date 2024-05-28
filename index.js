@@ -3,25 +3,16 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 
 const app = express()
-const port = 5000
+const port = process.env.PORT || 5000
 
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-    methods: ["GET", "POST"],
-  })
-)
+app.use(cors())
 app.use(express.json())
 
 // MongoDB connection
-mongoose.connect(
-  "mongodb+srv://zulfanurhuda01:zulfatasik28@timer-countdown.thkne8y.mongodb.net/?retryWrites=true&w=majority&appName=Timer-countdown",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-)
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 
 // Define a schema and model for the timer
 const timerSchema = new mongoose.Schema({
